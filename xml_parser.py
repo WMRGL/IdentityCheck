@@ -1,12 +1,12 @@
 """
 
  Script to parse XML output from MassArray ExomeQC and generate a VCF for each sample in the results.
- 
+
  To run, e.g.:
- 
+
     python xml_parser.py -xml WMRGL_ExomeQC_validation_Plate1_031218_1_F0008858.xml -bed hg19.bed
-    
- 
+
+
  Sarah Burns 28 Jan 2019
 
 """
@@ -21,26 +21,28 @@ import os
 arg_parser = argparse.ArgumentParser(description='Parses XML from MassArray into VCFs for each sample in results.')
 arg_parser.add_argument('-xml', action='store', help='Path to XML file', required=True)
 arg_parser.add_argument('-bed', action='store', help='Bed file with full SNP info', required=True)
+arg_parser.add_argument('-out', action='store', help='Output directory', default='/network/processed/100K_VCFs/limbo/')
 args = arg_parser.parse_args()
 
 
 class ParseMassArrayXml(object):
 
-    def __init__(self, xml_file, snp_bedfile):
+    def __init__(self, xml_file, snp_bedfile, output_dir):
         self.xml_tree = ElementTree.parse(xml_file)
         self.snp_file = snp_bedfile
+        self.output = output_dir
 
     def get_snps(self):
-        """ Convert SNP bed file into dictionary format.    
-            
+        """ Convert SNP bed file into dictionary format.
+
             Output e.g. {
                             'rs123': {
-                                'chrom': 'chr1', 
-                                'pos': 123, 
-                                'ref': 'A', 
-                                'alt': 'G', 
-                                'gene': 'ABC1', 
-                                'maf': 0.44, 
+                                'chrom': 'chr1',
+                                'pos': 123,
+                                'ref': 'A',
+                                'alt': 'G',
+                                'gene': 'ABC1',
+                                'maf': 0.44,
                                 'genome_build': 'hg19'
                             }
                         }
@@ -73,7 +75,7 @@ class ParseMassArrayXml(object):
 
     def get_analyser_name(self):
         """ Get name of MassArray analyser to add to VCF header.
-        
+
             Output e.g. "MA4-3.3.1.26-iPLEX"
 
         """
@@ -84,7 +86,7 @@ class ParseMassArrayXml(object):
 
     def get_pcr_sequences(self):
         """ Get PCR sequences for each SNP in assay and return dictionary.
-        
+
             Output e.g. { 'rs123': ['GAGA', 'GAGA'] }
 
         """
@@ -101,11 +103,11 @@ class ParseMassArrayXml(object):
 
     def get_results(self):
         """ Get SNP results for each sample and return dictionary.
-        
+
             Output e.g. {
                             'D00.00001': {
                                 'rs123': {
-                                    'genotype': '0/1', 
+                                    'genotype': '0/1',
                                     'quality': 'A'
                                 }
                             }
@@ -137,9 +139,9 @@ class ParseMassArrayXml(object):
         return d
 
     def get_snp_call_rate(self):
-        """ Calculate call rates for each SNP and return dictionary. For each SNP, count the number of samples with no 
+        """ Calculate call rates for each SNP and return dictionary. For each SNP, count the number of samples with no
             result, returning fraction.
-            
+
             Output e.g. { 'rs123': 0.1 }
 
         """
@@ -162,7 +164,7 @@ class ParseMassArrayXml(object):
         """ Run all functions in class to generate VCF file for each sample.
 
         """
-        
+
         # 1. Generate header info
         date_for_vcf = datetime.now().strftime('%Y%m%d')
         header_info = [
@@ -189,7 +191,7 @@ class ParseMassArrayXml(object):
         # 3. For each sample, create VCF, add headers, determine genotype of each SNP and write to file.
         for sample, variants in results.items():
 
-            with open('massarray_results/%s.vcf' % sample, 'w+') as outfile:
+            with open(os.path.join(self.output, '%s.vcf' % sample), 'w+') as outfile:
 
                 header_fields = ['CHROM', 'POS', 'ID', 'REF', 'ALT', 'QUAL', 'FILTER', 'INFO', 'FORMAT', str(sample)]
 
@@ -223,7 +225,7 @@ class ParseMassArrayXml(object):
                                     '%s %s.' % (called_genotype, sample, snp, alt_alleles)
                                 )
                     gt = '/'.join([str(x) for x in gt_list])
-                    
+
                     # Threshold currently set to 0.3 (70% results have a call).
                     snp_call_rate = call_rates[snp]
                     if snp_call_rate >= 0.3:
@@ -232,7 +234,7 @@ class ParseMassArrayXml(object):
                         vcf_filter = 'PASS'
 
                     snp_pcr_seqs = pcr_sequences[snp]
-                    
+
                     outfile.write(
                         '{chr}\t{pos}\t{id}\t{ref}\t{alt}\t.\t{filter}\tAF={af};PCR={pcr};Gene={gene};Build={build}\t'
                         'GT:MTQ\t{gt}:{qual}\n'.format(
@@ -251,9 +253,7 @@ class ParseMassArrayXml(object):
                         )
                     )
 
-
 # Create directory for output files and run parser.
-os.mkdir('massarray_results')
-xml_parser = ParseMassArrayXml(xml_file=args.xml, snp_bedfile=args.bed)
+xml_parser = ParseMassArrayXml(xml_file=args.xml, snp_bedfile=args.bed, output_dir=args.out)
 xml_parser.write_to_vcf()
 
