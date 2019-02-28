@@ -1,4 +1,4 @@
 # IdentityCheck
 
 ## Comparison Workflow
-![workflow](images/agenaflow.png)
+![workflow](images/agena_flow.png)
