@@ -48,4 +48,4 @@ rs2229546	IL12RB2	C	0.3702	A	0.6298	0.393551179	0.606448821
 
 ```
 
-Waits, Lisette & Luikart, Gordon & Taberlet, Pierre. (2001). Estimating the probability of identity among genotypes in natural populations. _Molecular Ecology Notes 10(1)_
+<sup><sub>Waits, Lisette & Luikart, Gordon & Taberlet, Pierre. (2001). Estimating the probability of identity among genotypes in natural populations. _Molecular Ecology Notes 10(1)_</sup></sub>
