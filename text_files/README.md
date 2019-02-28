@@ -21,7 +21,7 @@ chr10   103054405
 ```
 
 ### Identity probabilities and power calculations
-The probability of identity (PI) is an estimate of the average probability that 2 independent samples will have the same genotype:
+The probability of identity (PI) is an estimate of the average probability that 2 independent samples will have the same genotype (_Waits, et.al., 2001_):
 
 <img src="http://latex.codecogs.com/gif.latex?PI=2\left(\sum_{i}^{n}p_{i}^{2}\right)^{2}-\sum_{i}^{n}p_{i}^{4}" border="0"/>
 where p<sub>i</sub> is the allele frequency at the i<sup>th</sup> allele.
@@ -47,3 +47,5 @@ rs11080572	AFG3L2	C	0.2843	T	0.7157	0.434514776	0.565485224
 rs2229546	IL12RB2	C	0.3702	A	0.6298	0.393551179	0.606448821
 
 ```
+
+Waits, Lisette & Luikart, Gordon & Taberlet, Pierre. (2001). Estimating the probability of identity among genotypes in natural populations. _Molecular Ecology Notes 10(1)_
