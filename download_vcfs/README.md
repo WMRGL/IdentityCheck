@@ -1,4 +1,23 @@
 # Downloading VCFs from GEL
+
+## Requirements
+* bcftools v1.9
+* bgzip v1.9
+* tabix v1.9
+
+## Set-up
+* User credentials for CIP-API and openCGA to be added to a file named `auth_credentials.py`
+* Completed `config.txt` file specifying storage location and bcftools path
+* Directories within the specified storage location named `VCFs` and `Intersected-VCFs`
+* `input.txt` file within the specified storage location containing tab delimited GEL participant IDs and local identifer for each VCF that is to be downloaded
+* Text files named `hg19.nochr.txt` and `hg38.nochr.txt` saved in the specified storage location which contain the chromosome positions of each of the SNPs of interest.
+
+## To Run
+`cd` to directory of `run_download_vcfs.py`
+
+`python run_download_vcfs.py`
+
+## Description of process
 VCF files for specified patients are downloaded from openCGA.
 
 `run_download_vcfs.py` is the main script for this process. It looks for a file named "input.txt" at the storage location specified in the config file. This file should be a tab delimited text file consiting of GEL participant IDs and the local Lab patient ID for that sample:
