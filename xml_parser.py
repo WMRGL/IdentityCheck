@@ -205,7 +205,9 @@ class ParseMassArrayXml(object):
             'quality scores.">',
             '##INFO=<ID=PCR,Number=2,Type=String,Description="PCR sequences used in assay.">',
             '##INFO=<ID=AF,Number=A,Type=Float,Description="Minor allele frequency from population data.">',
-            '##FILTER=<ID=LowCallRate,Description="SNP not called in at least 30% of samples in assay.">'
+            '##INFO=<ID=Gene,Number=A,Type=String,Description="HGNC Gene Name for gene containing SNP.">',
+            '##INFO=<ID=Build,Number=A,Type=String,Description="Genome build used to determine SNP position for assay.">',
+            '##FILTER=<ID=LowCallRate,Description="SNP not called in at least 30% of samples in assay.">',
         ]
 
         # 2. Extract info from XML file
