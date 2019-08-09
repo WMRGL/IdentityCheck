@@ -201,7 +201,8 @@ class ParseMassArrayXml(object):
         header_parameters = [
             '##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">',
             '##FORMAT=<ID=MTQ,Number=1,Type=String,Description="MassArray Typer quality value for SNP call. '
-            'A=Conservative, B=Moderate, C=Aggressive, D=Low Probability, i=Low Intensity. A and B are considered high '
+            'A=Conservative, B=Moderate, C=Aggressive, D=Low Probability,'
+            'E=User Call, i=Low Intensity. A and B are considered high '
             'quality scores.">',
             '##INFO=<ID=PCR,Number=2,Type=String,Description="PCR sequences used in assay.">',
             '##INFO=<ID=AF,Number=A,Type=Float,Description="Minor allele frequency from population data.">',
