@@ -227,6 +227,9 @@ class ParseMassArrayXml(object):
                 outfile.write('%s\n' % '\n'.join(header_parameters))
                 outfile.write('#%s\n' % '\t'.join(header_fields))
 
+                # for each variant, make a line to add to the file which will
+                # then be sorted
+                lines_to_write = []
                 for snp, info in variants.items():
 
                     ref_allele = snps[snp]['ref']
@@ -263,7 +266,7 @@ class ParseMassArrayXml(object):
 
                     snp_pcr_seqs = pcr_sequences[snp]
 
-                    outfile.write(
+                    lines_to_write.append(
                         '{chr}\t{pos}\t{id}\t{ref}\t{alt}\t.\t{filter}\tAF={af};PCR={pcr};Gene={gene};Build={build}\t'
                         'GT:MTQ\t{gt}:{qual}\n'.format(
                             chr=snps[snp]['chrom'],
@@ -280,6 +283,19 @@ class ParseMassArrayXml(object):
                             qual=','.join(info['quality'])
                         )
                     )
+
+                sorted_lines_to_write = sorted(
+                    lines_to_write,
+                    key=lambda x: (
+                        # first key for sorting is the int value of chr
+                        int(x.split('\t')[0][3:]),
+                        # second key for sorting is the position of the variant
+                        int(x.split('\t')[1])
+                    )
+                )
+
+                for line in sorted_lines_to_write:
+                    outfile.write(line)
 
 # Create directory for output files and run parser.
 xml_parser = ParseMassArrayXml(xml_file=args.xml, snp_bedfile=args.bed, output_dir=args.out)
