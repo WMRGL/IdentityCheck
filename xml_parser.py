@@ -168,7 +168,7 @@ class ParseMassArrayXml(object):
         # 1. Generate header info
         date_for_vcf = datetime.now().strftime('%Y%m%d')
         header_info = [
-            '##fileformat=VCFv4.0',
+            '##fileformat=VCFv4.2',
             '##fileDate=%s' % date_for_vcf,
             '##source=%s' % self.get_analyser_name(),
             '##reference=https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.fa.gz',
