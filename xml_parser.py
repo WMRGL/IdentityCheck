@@ -168,9 +168,35 @@ class ParseMassArrayXml(object):
         # 1. Generate header info
         date_for_vcf = datetime.now().strftime('%Y%m%d')
         header_info = [
-            '##fileformat=VCFv4.0',
+            '##fileformat=VCFv4.2',
             '##fileDate=%s' % date_for_vcf,
-            '##source=%s' % self.get_analyser_name()
+            '##source=%s' % self.get_analyser_name(),
+            '##reference=https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/hg38.fa.gz',
+            '##contig=<ID=chr1,URL=https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr1.fa.gz>',
+            '##contig=<ID=chr2,URL=https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr2.fa.gz>',
+            '##contig=<ID=chr3,URL=https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr3.fa.gz>',
+            '##contig=<ID=chr4,URL=https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr4.fa.gz>',
+            '##contig=<ID=chr5,URL=https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr5.fa.gz>',
+            '##contig=<ID=chr6,URL=https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr6.fa.gz>',
+            '##contig=<ID=chr7,URL=https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr7.fa.gz>',
+            '##contig=<ID=chr8,URL=https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr8.fa.gz>',
+            '##contig=<ID=chr9,URL=https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr9.fa.gz>',
+            '##contig=<ID=chr10,URL=https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr10.fa.gz>',
+            '##contig=<ID=chr11,URL=https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr11.fa.gz>',
+            '##contig=<ID=chr12,URL=https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr12.fa.gz>',
+            '##contig=<ID=chr13,URL=https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr13.fa.gz>',
+            '##contig=<ID=chr14,URL=https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr14.fa.gz>',
+            '##contig=<ID=chr15,URL=https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr15.fa.gz>',
+            '##contig=<ID=chr16,URL=https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr16.fa.gz>',
+            '##contig=<ID=chr17,URL=https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr17.fa.gz>',
+            '##contig=<ID=chr18,URL=https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr18.fa.gz>',
+            '##contig=<ID=chr19,URL=https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr19.fa.gz>',
+            '##contig=<ID=chr20,URL=https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr20.fa.gz>',
+            '##contig=<ID=chr21,URL=https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr21.fa.gz>',
+            '##contig=<ID=chr22,URL=https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chr22.fa.gz>',
+            '##contig=<ID=chrM,URL=https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chrM.fa.gz>',
+            '##contig=<ID=chrX,URL=https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chrX.fa.gz>',
+            '##contig=<ID=chrY,URL=https://hgdownload.soe.ucsc.edu/goldenPath/hg38/chromosomes/chrY.fa.gz>',
         ]
         header_parameters = [
             '##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">',
@@ -179,7 +205,9 @@ class ParseMassArrayXml(object):
             'quality scores.">',
             '##INFO=<ID=PCR,Number=2,Type=String,Description="PCR sequences used in assay.">',
             '##INFO=<ID=AF,Number=A,Type=Float,Description="Minor allele frequency from population data.">',
-            '##FILTER=<ID=LowCallRate,Description="SNP not called in at least 30% of samples in assay.">'
+            '##INFO=<ID=Gene,Number=A,Type=String,Description="HGNC Gene Name for gene containing SNP.">',
+            '##INFO=<ID=Build,Number=A,Type=String,Description="Genome build used to determine SNP position for assay.">',
+            '##FILTER=<ID=LowCallRate,Description="SNP not called in at least 30% of samples in assay.">',
         ]
 
         # 2. Extract info from XML file
@@ -199,6 +227,9 @@ class ParseMassArrayXml(object):
                 outfile.write('%s\n' % '\n'.join(header_parameters))
                 outfile.write('#%s\n' % '\t'.join(header_fields))
 
+                # for each variant, make a line to add to the file which will
+                # then be sorted
+                lines_to_write = []
                 for snp, info in variants.items():
 
                     ref_allele = snps[snp]['ref']
@@ -235,7 +266,7 @@ class ParseMassArrayXml(object):
 
                     snp_pcr_seqs = pcr_sequences[snp]
 
-                    outfile.write(
+                    lines_to_write.append(
                         '{chr}\t{pos}\t{id}\t{ref}\t{alt}\t.\t{filter}\tAF={af};PCR={pcr};Gene={gene};Build={build}\t'
                         'GT:MTQ\t{gt}:{qual}\n'.format(
                             chr=snps[snp]['chrom'],
@@ -252,6 +283,19 @@ class ParseMassArrayXml(object):
                             qual=','.join(info['quality'])
                         )
                     )
+
+                sorted_lines_to_write = sorted(
+                    lines_to_write,
+                    key=lambda x: (
+                        # first key for sorting is the int value of chr
+                        int(x.split('\t')[0][3:]),
+                        # second key for sorting is the position of the variant
+                        int(x.split('\t')[1])
+                    )
+                )
+
+                for line in sorted_lines_to_write:
+                    outfile.write(line)
 
 # Create directory for output files and run parser.
 xml_parser = ParseMassArrayXml(xml_file=args.xml, snp_bedfile=args.bed, output_dir=args.out)
