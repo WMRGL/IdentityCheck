@@ -18,13 +18,6 @@ import argparse
 import os
 
 
-arg_parser = argparse.ArgumentParser(description='Parses XML from MassArray into VCFs for each sample in results.')
-arg_parser.add_argument('-xml', action='store', help='Path to XML file', required=True)
-arg_parser.add_argument('-bed', action='store', help='Bed file with full SNP info', required=True)
-arg_parser.add_argument('-out', action='store', help='Output directory', default='/network/processed/100K_VCFs/limbo/')
-args = arg_parser.parse_args()
-
-
 class ParseMassArrayXml(object):
 
     def __init__(self, xml_file, snp_bedfile, output_dir):
@@ -297,7 +290,13 @@ class ParseMassArrayXml(object):
                 for line in sorted_lines_to_write:
                     outfile.write(line)
 
-# Create directory for output files and run parser.
-xml_parser = ParseMassArrayXml(xml_file=args.xml, snp_bedfile=args.bed, output_dir=args.out)
-xml_parser.write_to_vcf()
+if __name__ == "__main__":
+    arg_parser = argparse.ArgumentParser(description='Parses XML from MassArray into VCFs for each sample in results.')
+    arg_parser.add_argument('-xml', action='store', help='Path to XML file', required=True)
+    arg_parser.add_argument('-bed', action='store', help='Bed file with full SNP info', required=True)
+    arg_parser.add_argument('-out', action='store', help='Output directory', default='/network/processed/100K_VCFs/limbo/')
+    args = arg_parser.parse_args()
+    # Create directory for output files and run parser.
+    xml_parser = ParseMassArrayXml(xml_file=args.xml, snp_bedfile=args.bed, output_dir=args.out)
+    xml_parser.write_to_vcf()
 

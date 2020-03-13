@@ -1,0 +1,8 @@
+tenant_id=
+client_id=
+client_secret=
+xml_path=
+vcf_path=
+log_file=
+snp_host=
+bed_file=
