@@ -20,7 +20,7 @@ The script will automatically generate and upload the VCFs to the required locat
 d-number_referralID_participantID_LSID
 
 The referral ID, participant ID and LSID are extracted from the sample name to determine the upload location for the sample.
-All activity is recoreded in the log file. This must be reviewed to monitor the outcomes of the file uploads. 
+All activity is recorded in the log file. This must be reviewed to monitor the outcomes of the file uploads. 
 
 # IdentityCheck
 (Not required for GMS activities as the ID check is performed by Genomics England)
