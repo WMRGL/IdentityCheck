@@ -40,3 +40,6 @@ The exclusion power is defined as the probability of having a unique assignment 
 <img src="http://latex.codecogs.com/gif.latex?Power=1-PI" border="0"/>
 
 <sup><sub>Waits, Lisette & Luikart, Gordon & Taberlet, Pierre. (2001). Estimating the probability of identity among genotypes in natural populations. _Molecular Ecology Notes 10(1)_</sup></sub>
+
+### Results
+N.B. results of validation run can be found on the P: drive at P:/100K_vcfs/results
