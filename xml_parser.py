@@ -16,6 +16,8 @@ from datetime import datetime
 import re
 import argparse
 import os
+import pprint
+import pandas as pd
 
 
 class ParseMassArrayXml(object):
@@ -108,6 +110,7 @@ class ParseMassArrayXml(object):
 
         """
         d = {}
+#        r = {}
         for analyser in self.xml_tree.getroot():
             for child in analyser:
                 if child.tag == 'all-records':
@@ -129,6 +132,23 @@ class ParseMassArrayXml(object):
                                     d[sample][assay_id] = {'genotype': genotype, 'quality': [quality]}
                             else:
                                 d[sample] = {assay_id: {'genotype': genotype, 'quality': [quality]}}
+#                            if sample in r:
+#                                if assay_id in r[sample]:
+#                                    for allele in list(genotype):
+#                                        if allele not in r[sample][assay_id]:
+#                                            r[sample][assay_id] += allele
+#                                else:
+#                                    r[sample][assay_id] = genotype
+#                            else:
+#                                r[sample] = {assay_id: genotype}
+#        for k, v in r.items():
+#          for k1, v1, in v.items():
+#            if len(v1) == 1:
+#              v[k1] += v1
+#        pprint.pprint(r)
+#        df = pd.DataFrame.from_dict(r).transpose()
+#        print(df)
+#        df.to_excel('snpcheck.xlsx')
         return d
 
     def get_snp_call_rate(self):
